@@ -3,18 +3,19 @@ package com.example.simplerpg;
 /**
  * Created by Никита on 26.11.2016.
  */
-public class Hero extends GameCharacter implements Cloneable  {
+public class Hero extends GameCharacter {
     private int currentExp;
     private int expToNextLevel;
+    private int killedMonsters;
+    public Inventory myInv;
 
-    public Hero(String _charClass, String _name, int _hp, int _attack, int _defense){
-        super(_charClass, _name, _hp, _attack, _defense);
-        initHero();
-    }
-
-    private void initHero(){
+    public Hero(String _charClass, String _name, int _strength, int _agility, int _stamina){
+        super(_charClass, _name, _strength, _agility, _stamina);
         currentExp = 0;
         expToNextLevel = 1000;
+        killedMonsters = 0;
+        myInv = new Inventory();
+        myInv.add("Слабое зелье лечения");
     }
 
     public void expGain(int _exp){
@@ -25,23 +26,23 @@ public class Hero extends GameCharacter implements Cloneable  {
             expToNextLevel *= 2;
             level++;
             attack += 5;
-            System.out.println("Атака героя повысилась до " + attack + " ед. урона");
+            hpMax += 50;
+            strength += 2;
+            agility += 2;
+            stamina += 1;
+            calculateSecondaryParameters();
             hp = hpMax;
-            System.out.println(name = " повысил уровень до " + level);
+            System.out.println(name + " повысил уровень до " + level);
         }
     }
 
-    public void ShowFullInfo(){
-
+    public void addKillCounter()
+    {
+        killedMonsters++;
     }
 
-    public Object clone(){
-        try{
-            return super.clone();
-        }
-        catch (CloneNotSupportedException e){
-            System.out.println("Клонировать невозможно");
-            return this;
-        }
+    public void ShowInfo()
+    {
+        System.out.println("Имя: " + name + " Здоровье: " + hp + "/" + hpMax + " Уровень: " + level + "[" +currentExp + " / " + expToNextLevel + "]");
     }
 }
