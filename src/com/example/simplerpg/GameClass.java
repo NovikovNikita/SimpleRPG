@@ -14,22 +14,46 @@ public class GameClass {
     private Monster currentMonster;
     private int currentRound;
 
-    private Scanner sc = new Scanner(System.in);
+    private int inpInt;
 
     public GameClass(){ initGame(); }
 
     public void mainGameLoop() {
-        int inpInt = 0;
+        inpInt = 0;
         System.out.println("Игра началась!");
 
+        selectHero();
+        currentMonster = (Monster)monsterPattern[0].clone();
+        currentMonster.lvlUp(3);
+
+        battle(mainHero, currentMonster);
+
+        int x = getAction(1, 4, "Что вы хотите делать дальше 1. Следующий бой; 2. Перейти в более опасную зону; 3. Перейти в город; 4. Отдохнуть");
+        switch (x) {
+            case 1:
+                currentMonster = (Monster)monsterPattern[0].clone();
+                battle(mainHero, currentMonster);
+                break;
+            case 4:
+                mainHero.fullHeal();
+                break;
+        }
+
+        System.out.println("Игра завершена");
+    }
+
+    public void selectHero() {
         String s = "Выберите героя: ";
         for (int i = 0; i < 3; i++)
             s += (i + 1) + ". " + heroPattern[i].getName() + "   ";
         inpInt = getAction(1, 3, s);
 
         mainHero = (Hero)heroPattern[inpInt - 1].clone();
-        System.out.println("Вы выбрали " + mainHero.getName());
-        currentMonster = (Monster)monsterPattern[0].clone();
+        System.out.println(mainHero.getName() + " начал своё путешествие");
+    }
+
+    public void battle(Hero h, Monster m) {
+        System.out.println("Бой между игроком " + h.getName() + " и монстром " + m.getName() + " начался");
         do {
             System.out.println("Текущий раунд: " + currentRound);
             mainHero.ShowInfo();
@@ -46,8 +70,8 @@ public class GameClass {
                     System.out.println(currentMonster.getName() + " погиб");
                     mainHero.expGain(currentMonster.getHpMax() * 2);
                     mainHero.addKillCounter();
-                    currentMonster = (Monster)monsterPattern[rand.nextInt(3)].clone();
                     System.out.println("На поле боя выходит " + currentMonster.getName());
+                    break;
                 }
             }
             if (inpInt == 2)
@@ -67,7 +91,7 @@ public class GameClass {
 
             currentMonster.makeNewRound();
 
-            if(rand.nextInt(100) < 80)
+            if(Utils.rand.nextInt(100) < 80)
                 mainHero.getDamage(currentMonster.makeAttack());
             else
                 currentMonster.setBlockStance();
@@ -78,11 +102,9 @@ public class GameClass {
             currentRound++;
         }
         while(true);
-
         if(currentMonster.isAlive() && mainHero.isAlive()) System.out.println(mainHero.getName() + " сбежал с поля боя");
         if(!currentMonster.isAlive()) System.out.println("Победил " + mainHero.getName());
         if(!mainHero.isAlive()) System.out.println("Победил " + currentMonster.getName());
-        System.out.println("Игра завершена");
     }
 
 
@@ -102,7 +124,7 @@ public class GameClass {
         do
         {
             if(_str != "" ) System.out.println(_str);
-            x = sc.nextInt();
+            x = Utils.sc.nextInt();
         } while (x < _min || x > _max);
         return x;
     }

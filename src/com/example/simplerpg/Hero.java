@@ -15,7 +15,7 @@ public class Hero extends GameCharacter {
         expToNextLevel = 1000;
         killedMonsters = 0;
         myInv = new Inventory();
-        myInv.add("Слабое зелье лечения");
+        myInv.add(new Item("Слабое зелье лечения", Item.ItemType.Consumables));
     }
 
     public void expGain(int _exp){

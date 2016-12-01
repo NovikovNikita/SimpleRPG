@@ -125,4 +125,8 @@ public class GameCharacter implements Cloneable {
                 break;
         }
     }
+
+    public void fullHeal() {
+        hp = hpMax;
+    }
 }
