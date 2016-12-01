@@ -6,16 +6,28 @@ public class Inventory {
 
     private int gold;
     ArrayList<Item> inv;
-    public Inventory() { inv = new ArrayList<>(); }
-
-    public void add(Item _newItem) {
+    public Inventory() {
         gold = 0;
-        inv.add(_newItem);
+        inv = new ArrayList<>();
     }
 
     public void addSomeCoins(int amout) {
         gold += amout;
     }
+
+    public void spendCoins(int amout) {
+        gold -= amout;
+    }
+
+    public boolean isCoinsEnough(int amout) {
+        if (gold >= amout) {
+            return true;
+        }
+        return false;
+    }
+
+    public void add(Item _newItem) { inv.add(_newItem); }
+
 
     public void showAllItems(){
         System.out.println("Инвентарь:");
@@ -26,6 +38,7 @@ public class Inventory {
         }
         else
             System.out.println("Инвентарь пуст");
+        System.out.println("Золото: " + gold);
     }
 
     public String useItem(int _itemID) {
@@ -33,9 +46,18 @@ public class Inventory {
             return "";
 
         String a = inv.get(_itemID - 1).getName();
-        inv.remove(_itemID - 1);
+        if (inv.get(_itemID - 1).getType() == Item.ItemType.Consumables) {
+            inv.remove(_itemID - 1);
+        }
         return a;
     }
 
     public int getSize() { return inv.size(); }
+
+    public void transferAllItemsToAnotherInventory(Inventory _inv) {
+        for (int i = 0; i < inv.size(); i++) {
+            _inv.add(inv.get(i));
+            _inv.addSomeCoins(gold);
+        }
+    }
 }

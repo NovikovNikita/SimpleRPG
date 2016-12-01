@@ -1,21 +1,43 @@
 package com.example.simplerpg;
 
-/**
- * Created by Никита on 26.11.2016.
- */
 public class Hero extends GameCharacter {
+
     private int currentExp;
     private int expToNextLevel;
     private int killedMonsters;
-    public Inventory myInv;
+    private int currentZone;
+    private int posX;
+    public int getX() { return posX; }
+    public int getY() { return posY; }
+    private int posY;
+
+    public void setXY(int _x, int _y) {
+        posX = _x;
+        posY = _y;
+    }
+
+    public void moveHero(int _vx, int _vy) {
+        posX += _vx;
+        posY += _vy;
+    }
+
+    public int getZoneDangerous() { return currentZone; }
+
+    public void goToDangerousZone() {
+        currentZone++;
+        System.out.println("Герой перешел в зону опасности " + currentZone);
+    }
 
     public Hero(String _charClass, String _name, int _strength, int _agility, int _stamina){
         super(_charClass, _name, _strength, _agility, _stamina);
+        currentZone = 0;
         currentExp = 0;
         expToNextLevel = 1000;
         killedMonsters = 0;
         myInv = new Inventory();
+        myInv.add(new Item("Слабый камень здоровья", Item.ItemType.InfConsumables));
         myInv.add(new Item("Слабое зелье лечения", Item.ItemType.Consumables));
+        myInv.addSomeCoins(1000);
     }
 
     public void expGain(int _exp){
@@ -41,7 +63,7 @@ public class Hero extends GameCharacter {
         killedMonsters++;
     }
 
-    public void ShowInfo()
+    public void showInfo()
     {
         System.out.println("Имя: " + name + " Здоровье: " + hp + "/" + hpMax + " Уровень: " + level + "[" +currentExp + " / " + expToNextLevel + "]");
     }
